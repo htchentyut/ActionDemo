@@ -8,8 +8,8 @@ import os
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    video_image_path = '/media/hchen/T1/data/P24/image/'
-    output_path = '/home/hchen/demo/'
+    video_image_path = '/Users/"USERNAME"/data/P19/image/'
+    output_path = '/Users/"USERNAME"/demo/'
     videonames = os.listdir(video_image_path)
     for videoname in videonames:
         image_path = os.path.join(video_image_path, videoname)
