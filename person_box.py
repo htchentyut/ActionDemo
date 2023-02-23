@@ -77,7 +77,7 @@ def person_box(img_path, output_path):
     args.output = output_path
     # args.NUM_GPUS = 0
 
-    args.opts = ["MODEL.WEIGHTS", "./model/model_final_5ad38f.pkl", "MODEL.DEVICE", "cpu"]
+    args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/model_final_5ad38f.pkl", "MODEL.DEVICE", "cpu"]
 
     cfg = setup_cfg(args)
 
