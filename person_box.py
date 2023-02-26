@@ -75,9 +75,10 @@ def person_box(img_path, output_path):
     args.input = glob.glob(img_path + "/*.jpg")
 
     args.output = output_path
-    # args.NUM_GPUS = 0
 
-    args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cpu"]
+    args.NUM_GPUS = 2
+
+    args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
 
     cfg = setup_cfg(args)
 

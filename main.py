@@ -8,7 +8,7 @@ import os
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    video_image_path = '/media/hchen/T1/data/P24/image/'
+    video_image_path = '/home/hchen/data/P24/image/'
     output_path = '/home/hchen/demo/'
     videonames = os.listdir(video_image_path)
     for videoname in videonames:

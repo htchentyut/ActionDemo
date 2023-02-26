@@ -1,3 +1,6 @@
+# git的使用说明：
+https://blog.csdn.net/weixin_43915401/article/details/127844587
+
 # slowfast使用实例及介绍：
 
 https://blog.csdn.net/WhiffeYF/article/details/115581800#42_yaml_577
