@@ -10,6 +10,8 @@ import csv
 import numpy as np
 import os
 
+import cv2
+
 
 def setup_cfg(args):
     # load config from file and command-line arguments
@@ -91,13 +93,16 @@ def person_box(img_path, output_path):
     CSVwriter = csv.writer(csvfile)
 
     CSVwriter.writerow(["image_name", "x", "y", "width", "height", "score", "class",
-                        "kp01_x", "kp02_x", "kp03_x", "kp04_x", "kp05_x", "kp06_x", "kp07_x", "kp08_x", "kp09_x", "kp10_x",
+                        "kp01_x", "kp02_x", "kp03_x", "kp04_x", "kp05_x", "kp06_x", "kp07_x", "kp08_x", "kp09_x",
+                        "kp10_x",
                         "kp11_x", "kp12_x", "kp13_x", "kp14_x", "kp15_x", "kp16_x", "kp17_x",
-                        "kp01_y", "kp02_y", "kp03_y", "kp04_y", "kp05_y", "kp06_y", "kp07_y", "kp08_y", "kp09_y", "kp10_y",
+                        "kp01_y", "kp02_y", "kp03_y", "kp04_y", "kp05_y", "kp06_y", "kp07_y", "kp08_y", "kp09_y",
+                        "kp10_y",
                         "kp11_y", "kp12_y", "kp13_y", "kp14_y", "kp15_y", "kp16_y", "kp17_y",
-                        "kp01_s", "kp02_s", "kp03_s", "kp04_s", "kp05_s", "kp06_s", "kp07_s", "kp08_s", "kp09_s", "kp10_s",
+                        "kp01_s", "kp02_s", "kp03_s", "kp04_s", "kp05_s", "kp06_s", "kp07_s", "kp08_s", "kp09_s",
+                        "kp10_s",
                         "kp11_s", "kp12_s", "kp13_s", "kp14_s", "kp15_s", "kp16_s", "kp17_s"
-    ])
+                        ])
 
     for img_file in tqdm.tqdm(args.input, disable=not args.output):
         # print(img_file)
@@ -124,6 +129,63 @@ def person_box(img_path, output_path):
             keypoints.append(ikeypoints.cpu().numpy())
 
         for iinstance in range(len(boxes)):
-            ins_info = [img_file] + boxes[iinstance] + [scores[iinstance]] + [classes[iinstance]] + np.array(keypoints[iinstance]).T.ravel().tolist()
+            ins_info = [img_file] + boxes[iinstance] + [scores[iinstance]] + [classes[iinstance]] + np.array(
+                keypoints[iinstance]).T.ravel().tolist()
             CSVwriter.writerow(ins_info)
     csvfile.close()
+
+    def person_box_via(img_path, output_path):
+        args = get_parser().parse_args()
+        # print(args.opts)
+        args.config_file = './configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml'
+
+        args.input = glob.glob(img_path + "/*.jpg")
+
+        args.output = output_path
+
+        args.NUM_GPUS = 2
+
+        args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
+
+        cfg = setup_cfg(args)
+
+        net = VisualizationDemo(cfg)
+
+        # if not os.path.exists(args.output):
+        #     os.makedirs(args.output)
+        csvfile = open(args.output + "_via.csv", "w+", encoding="gbk")
+
+        CSVwriter = csv.writer(csvfile)
+
+        CSVwriter.writerow(
+            ["filename", "file_size", "file_attributes", "region_count", "region_id", "region_shape_attributes",
+             "region_attributes"])
+
+        for img_file in tqdm.tqdm(args.input, disable=not args.output):
+            # print(img_file)
+            img = read_image(img_file, format="BGR")
+            predictions, visualized_output = net.run_on_image(img)
+
+            mask = predictions["instances"].pred_classes == 0
+            pred_boxes = redictions["instances"].pred_boxes.tesor[mask]
+
+            imgsz = os.path.getsize(im_file)
+
+            img_file_attributes = "{" + "}"
+
+            region_id = 0
+
+            img_region_attributes = "{"+"}"
+
+            for ibox in pred_boxes:
+                iboxlist = ibox.cpu().numpy().tolist()
+                img_region_shape_attributes = {"\"name\"": "\"rect\"",
+                                               "\"x\"": int(iboxlist[0]), "\"y\"": int(iboxlist[1]),
+                                               "\"width\"": int(iboxlist[2]-iboxlist[0]),
+                                               "\"height\"": int(iboxlist[3]-iboxlist[1])}
+
+                CSVwriter.writerow([img_file, imgsz, '"{"', img_region_count, region_id,
+                                    str(img_region_shape_attributes), '"{}"'])
+
+                region_id = region_id + 1
+
