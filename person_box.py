@@ -168,9 +168,9 @@ def person_box_via(img_path, output_path):
         predictions, visualized_output = net.run_on_image(img)
 
         mask = predictions["instances"].pred_classes == 0
-        pred_boxes = redictions["instances"].pred_boxes.tesor[mask]
+        pred_boxes = predictions["instances"].pred_boxes.tensor[mask]
 
-        imgsz = os.path.getsize(im_file)
+        imgsz = os.path.getsize(img_file)
 
         img_file_attributes = "{" + "}"
 
