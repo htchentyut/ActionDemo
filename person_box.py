@@ -189,3 +189,4 @@ def person_box(img_path, output_path):
 
                 region_id = region_id + 1
 
+        csvfile.close()

@@ -15,7 +15,7 @@ if __name__ == '__main__':
     for videoname in videonames:
         image_path = os.path.join(video_image_path, videoname)
         keypoints_path = os.path.join(output_path, videoname)
-        person_box(image_path, keypoints_path)
+        person_box_via(image_path, keypoints_path)
     # person_box()
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
