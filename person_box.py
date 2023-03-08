@@ -134,59 +134,60 @@ def person_box(img_path, output_path):
             CSVwriter.writerow(ins_info)
     csvfile.close()
 
-    def person_box_via(img_path, output_path):
-        args = get_parser().parse_args()
-        # print(args.opts)
-        args.config_file = './configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml'
 
-        args.input = glob.glob(img_path + "/*.jpg")
+def person_box_via(img_path, output_path):
+    args = get_parser().parse_args()
+    # print(args.opts)
+    args.config_file = './configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml'
 
-        args.output = output_path
+    args.input = glob.glob(img_path + "/*.jpg")
 
-        args.NUM_GPUS = 2
+    args.output = output_path
 
-        args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
+    args.NUM_GPUS = 2
 
-        cfg = setup_cfg(args)
+    args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
 
-        net = VisualizationDemo(cfg)
+    cfg = setup_cfg(args)
 
-        # if not os.path.exists(args.output):
-        #     os.makedirs(args.output)
-        csvfile = open(args.output + "_via.csv", "w+", encoding="gbk")
+    net = VisualizationDemo(cfg)
 
-        CSVwriter = csv.writer(csvfile)
+    # if not os.path.exists(args.output):
+    #     os.makedirs(args.output)
+    csvfile = open(args.output + "_via.csv", "w+", encoding="gbk")
 
-        CSVwriter.writerow(
-            ["filename", "file_size", "file_attributes", "region_count", "region_id", "region_shape_attributes",
-             "region_attributes"])
+    CSVwriter = csv.writer(csvfile)
 
-        for img_file in tqdm.tqdm(args.input, disable=not args.output):
-            # print(img_file)
-            img = read_image(img_file, format="BGR")
-            predictions, visualized_output = net.run_on_image(img)
+    CSVwriter.writerow(
+        ["filename", "file_size", "file_attributes", "region_count", "region_id", "region_shape_attributes",
+         "region_attributes"])
 
-            mask = predictions["instances"].pred_classes == 0
-            pred_boxes = redictions["instances"].pred_boxes.tesor[mask]
+    for img_file in tqdm.tqdm(args.input, disable=not args.output):
+        # print(img_file)
+        img = read_image(img_file, format="BGR")
+        predictions, visualized_output = net.run_on_image(img)
 
-            imgsz = os.path.getsize(im_file)
+        mask = predictions["instances"].pred_classes == 0
+        pred_boxes = redictions["instances"].pred_boxes.tesor[mask]
 
-            img_file_attributes = "{" + "}"
+        imgsz = os.path.getsize(im_file)
 
-            region_id = 0
+        img_file_attributes = "{" + "}"
 
-            img_region_attributes = "{"+"}"
+        region_id = 0
 
-            for ibox in pred_boxes:
-                iboxlist = ibox.cpu().numpy().tolist()
-                img_region_shape_attributes = {"\"name\"": "\"rect\"",
-                                               "\"x\"": int(iboxlist[0]), "\"y\"": int(iboxlist[1]),
-                                               "\"width\"": int(iboxlist[2]-iboxlist[0]),
-                                               "\"height\"": int(iboxlist[3]-iboxlist[1])}
+        img_region_attributes = "{" + "}"
 
-                CSVwriter.writerow([img_file, imgsz, '"{"', img_region_count, region_id,
-                                    str(img_region_shape_attributes), '"{}"'])
+        for ibox in pred_boxes:
+            iboxlist = ibox.cpu().numpy().tolist()
+            img_region_shape_attributes = {"\"name\"": "\"rect\"",
+                                           "\"x\"": int(iboxlist[0]), "\"y\"": int(iboxlist[1]),
+                                           "\"width\"": int(iboxlist[2] - iboxlist[0]),
+                                           "\"height\"": int(iboxlist[3] - iboxlist[1])}
 
-                region_id = region_id + 1
+            CSVwriter.writerow([img_file, imgsz, '"{"', img_region_count, region_id,
+                                str(img_region_shape_attributes), '"{}"'])
 
-        csvfile.close()
+            region_id = region_id + 1
+
+    csvfile.close()
