@@ -172,11 +172,13 @@ def person_box_via(img_path, output_path):
 
         imgsz = os.path.getsize(img_file)
 
-        img_file_attributes = "{" + "}"
+        img_file_attributes = "{"+"}"
+
+        img_region_count = len(pred_boxes)
 
         region_id = 0
 
-        img_region_attributes = "{" + "}"
+        img_region_attributes = "{"+"}"
 
         for ibox in pred_boxes:
             iboxlist = ibox.cpu().numpy().tolist()
