@@ -5,7 +5,7 @@
 
 from person_box import person_box_via
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = '0, 1'
+os.environ["CUDA_VISIBLE_DEVICES"] = '0,1'
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

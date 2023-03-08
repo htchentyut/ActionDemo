@@ -12,6 +12,7 @@ import os
 
 import cv2
 
+os.environ["CUDA_VISIBLE_DEVICES"] = '0,1'
 
 def setup_cfg(args):
     # load config from file and command-line arguments
@@ -78,7 +79,7 @@ def person_box(img_path, output_path):
 
     args.output = output_path
 
-    args.NUM_GPUS = 2
+    # args.NUM_GPUS = 2
 
     args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
 
@@ -144,7 +145,7 @@ def person_box_via(img_path, output_path):
 
     args.output = output_path
 
-    args.NUM_GPUS = 2
+    # args.num_gpus = 2
 
     args.opts = ["MODEL.WEIGHTS", "/home/hchen/model_zoo/detectron2/model_final_5ad38f.pkl", "MODEL.DEVICE", "cuda"]
 
